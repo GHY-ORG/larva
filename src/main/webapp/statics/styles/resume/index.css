@@ -1,0 +1,19 @@
+.dividing-line {
+    width: 60px;
+    height: 3px;
+    float: left;
+    background: #ff731f;
+    margin-top: -10px;
+}
+
+input[type="text"],
+input[type="tel"],
+input[type="date"],
+input[type="email"],
+select{
+    max-width: 280px !important;
+}
+
+label {
+    width: 125px !important;
+}

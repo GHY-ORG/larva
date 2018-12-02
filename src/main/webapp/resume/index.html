@@ -1,0 +1,178 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>光华园·简历投递</title>
+    <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
+    <link rel="stylesheet" href="../statics/styles/main.min.css">
+    <link rel="stylesheet" href="../statics/styles/resume/index.css">
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-lg sticky-top navbar-default bg-orange" role="navigation">
+        <a class="navbar-brand" href="http://ghy.swufe.edu.cn/" target="_blank" class="navbar-brand">
+            <img src="../statics/styles/images/ghy_logo.png" alt="光华园 GHY.CN" height="50">
+        </a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarContent" aria-controls="navbarContent"
+            aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarContent">
+            <ul class="navbar-nav ml-auto">
+                <li>
+                    <a class="nav-link" href="http://ghy.swufe.edu.cn/" title="首页" target="_blank">首页</a>
+                </li>
+                <li>
+                    <a class="nav-link" href="http://ghy.swufe.edu.cn/aboutus" title="关于我们" target="_blank">关于我们</a>
+                </li>
+                <li>
+                    <a class="nav-link" href="http://ghy.swufe.edu.cn/aboutus/#2" title="成员名单" target="_blank">成员名单</a>
+                </li>
+                <li>
+                    <a class="nav-link" href="http://ghy.swufe.edu.cn/aboutus/#3" title="加入我们" target="_blank">加入我们</a>
+                </li>
+                <li>
+                    <a class="nav-link" href="http://ghy.swufe.edu.cn/aboutus/#4" title="广告宣传" target="_blank">广告宣传</a>
+                </li>
+                <li>
+                    <a class="nav-link" href="http://ghy.swufe.edu.cn/aboutus/#5" title="合作伙伴" target="_blank">合作伙伴</a>
+                </li>
+                <li>
+                    <a class="nav-link" href="http://diary.ghy.cn/" title="网站日志" target="_blank">网站日志</a>
+                </li>
+                <li>
+                    <a class="nav-link active" href="/resume/" title="简历投递" target="_blank">简历投递</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+    <div class="container py-5">
+        <h1 class="h2 mb-4">
+            <strong style="color: #5d5d5d">光华园·简历投递</strong>
+            <small class="text-muted h6">加 * 的为必填项</small>
+            <p class="h5" style="color: #939393">
+                <small>SUBMITING RESUME</small>
+            </p>
+            <div class="dividing-line"></div>
+        </h1>
+        <form action="/api/resume" method="post" role="form" id="resumeForm">
+            <h3>个人信息</h3>
+            <div class="px-4">
+                <div class="form-group">
+                    <label class="control-label d-sm-block d-md-inline-block" for="name">姓名 *</label>
+                    <input class="form-control d-sm-block d-md-inline" id="name" name="name" type="text" required>
+                </div>
+                <div class="form-group">
+                    <label class="control-label d-sm-block d-md-inline-block" for="sex">性别</label>
+                    <select class="custom-select d-sm-block d-md-inline" id="sex" name="sex">
+                        <option selected value="男">男</option>
+                        <option value="女">女</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="control-label d-sm-block d-md-inline-block" for="birthday">出生年月</label>
+                    <input class="form-control d-sm-block d-md-inline" id="birthday" name="birthday" type="date">
+                </div>
+                <div class="form-group">
+                    <label class="control-label d-sm-block d-md-inline-block" for="gradeMajor">年级专业 *</label>
+                    <input class="form-control d-sm-block d-md-inline" id="gradeMajor" name="gradeMajor" type="text" required>
+                </div>
+                <div class="form-group">
+                    <label class="control-label d-sm-block d-md-inline-block" for="QQ">QQ</label>
+                    <input class="form-control d-sm-block d-md-inline" id="QQ" name="QQ" type="text">
+                </div>
+                <div class="form-group">
+                    <label class="control-label d-sm-block d-md-inline-block" for="email">邮箱</label>
+                    <input class="form-control d-sm-block d-md-inline" id="email" name="email" type="email">
+                </div>
+                <div class="form-group">
+                    <label class="control-label d-sm-block d-md-inline-block" for="phone">电话号码 *</label>
+                    <input class="form-control d-sm-block d-md-inline" id="phone" name="phone" type="tel" required>
+                </div>
+            </div>
+
+            <h3>志愿部门/子网(可以多选哦)： *</h3>
+            <div class="form-group row px-5">
+                <div class="custom-control col-md-3 col-sm-4 custom-checkbox py-2">
+                    <input class="custom-control-input" name="office" type="checkbox" id="office" value="1">
+                    <label class="custom-control-label" for="office">办公室</label>
+                </div>
+                <div class="custom-control col-md-3 col-sm-4 custom-checkbox py-2">
+                    <input class="custom-control-input" name="operationDepartment" type="checkbox" id="operationDepartment" value="1">
+                    <label class="custom-control-label" for="operationDepartment">运营部</label>
+                </div>
+                <div class="custom-control col-md-3 col-sm-4 custom-checkbox py-2">
+                    <input class="custom-control-input" name="developmentDepartment" type="checkbox" id="developmentDepartment" value="1">
+                    <label class="custom-control-label" for="developmentDepartment">开发部</label>
+                </div>
+                <div class="custom-control col-md-3 col-sm-4 custom-checkbox py-2">
+                    <input class="custom-control-input" name="designDepartment" type="checkbox" id="designDepartment" value="1">
+                    <label class="custom-control-label" for="designDepartment">设计部</label>
+                </div>
+                <div class="custom-control col-md-3 col-sm-4 custom-checkbox py-2">
+                    <input class="custom-control-input " name="filmDepartment" type="checkbox" id="filmDepartment" value="1">
+                    <label class="custom-control-label " for="filmDepartment">影视部</label>
+                </div>
+                <div class="custom-control col-md-3 col-sm-4 custom-checkbox py-2">
+                    <input class="custom-control-input" name="informationDepartment" type="checkbox" id="informationDepartment" value="1">
+                    <label class="custom-control-label" for="informationDepartment">资讯部</label>
+                </div>
+                <div class="custom-control col-md-3 col-sm-4 custom-checkbox py-2">
+                    <input class="custom-control-input " name="lifeWebsite" type="checkbox" id="lifeWebsite" value="1">
+                    <label class="custom-control-label " for="lifeWebsite">生活网</label>
+                </div>
+                <div class="custom-control col-md-3 col-sm-4 custom-checkbox py-2">
+                    <input class="custom-control-input" name="musicWebsite" type="checkbox" id="musicWebsite" value="1">
+                    <label class="custom-control-label " for="musicWebsite">音乐网</label>
+                </div>
+
+
+                <div class="custom-control col-md-3 col-sm-4 custom-checkbox py-2">
+                    <input class="custom-control-input " name="softwareWebsite" type="checkbox" id="softwareWebsite" value="1">
+                    <label class="custom-control-label " for="softwareWebsite">软件园</label>
+                </div>
+                <div class="custom-control col-md-3 col-sm-4 custom-checkbox py-2">
+                    <input class="custom-control-input " name="studyWebsite" type="checkbox" id="studyWebsite" value="1">
+                    <label class="custom-control-label" for="studyWebsite">学苑</label>
+                </div>
+            </div>
+            <h3>你为什么想加入光华园：</h3>
+            <div class="p-3">
+                <textarea class="form-control" cols="5" rows="4" id="reason" name="reason"></textarea>
+            </div>
+            <button type="submit" class="btn btn-lg btn-primary">提交</button>
+        </form>
+    </div>
+    <footer class="container-fluid bg-gray">
+        <div class="container px-8 pt-2">
+            <img src="../statics/styles/images/ghy_logo.png" class="bg-orange my-4 d-none d-md-block" alt="">
+            <div class="row">
+                <div class="col-md-8 col-sm-12 mx-auto">
+                    <p>Copyright 2001-2018 GHY.cn. All rights reserved. 蜀ICP备07004602号</p>
+                    <p class="d-none d-md-block">西南财经大学党委宣传统战部 前进动力工作室</p>
+                </div>
+                <div class="col-md-4 d-none d-md-block">
+                    <p>
+                        <strong>Phone:</strong>028-87092700</p>
+                    <p>
+                        <strong>Email:</strong>ghyers@gmail.com</p>
+                    <p>
+                        <strong>Address:</strong>腾骧楼422室 前进动力工作室</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+    <script src="https://cdn.bootcss.com/jquery/3.2.1/jquery.slim.min.js " integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN "
+        crossorigin="anonymous "></script>
+    <script src="https://cdn.bootcss.com/popper.js/1.12.9/umd/popper.min.js " integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q "
+        crossorigin="anonymous "></script>
+    <script src="https://cdn.bootcss.com/bootstrap/4.0.0/js/bootstrap.min.js " integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl "
+        crossorigin="anonymous "></script>
+    <script src="../statics/scripts/EventUtil.min.js"></script>
+    <script src="../statics/scripts/resume/index.js"></script>
+</body>
+
+</html>
