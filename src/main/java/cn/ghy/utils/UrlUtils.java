@@ -12,11 +12,11 @@ import java.nio.charset.StandardCharsets;
  */
 public class UrlUtils {
 
-  public String encodeUrl(String decodedUrl) {
-    return URLEncoder.encode(decodedUrl, StandardCharsets.UTF_8);
-  }
+    public String encodeUrl(String decodedUrl) {
+        return URLEncoder.encode(decodedUrl, StandardCharsets.UTF_8);
+    }
 
-  public String decodeUrl(String encodedUrl) {
-    return URLDecoder.decode(encodedUrl, StandardCharsets.UTF_8);
-  }
+    public String decodeUrl(String encodedUrl) {
+        return URLDecoder.decode(encodedUrl, StandardCharsets.UTF_8);
+    }
 }

@@ -24,42 +24,42 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/register")
 public class RegisterController {
 
-  private final UserService userService;
+    private final UserService userService;
 
-  @Autowired
-  public RegisterController(UserService userService) {
-    this.userService = userService;
-  }
-
-  @RequestMapping(value = "", method = RequestMethod.POST)
-  public Response register(@RequestBody @Valid User user, BindingResult result) {
-    Response response;
-    if (result.hasErrors()) {
-      response = new Response(400, "Illegal input.", result.toString());
-    } else {
-      if (isEmailAvailable(user.getEmail())) {
-        try {
-          String rawPassword = user.getPassword();
-          String encodedPassword = "{bcrypt}" + new BCryptPasswordEncoder().encode(rawPassword);
-          user.setPassword(encodedPassword);
-          userService.save(user);
-          response = new Response(201, "User has been successfully created.");
-        } catch (Exception e) {
-          response = new Response(400, "Failed to create user.");
-        }
-      } else {
-        response = new Response(400, "The Email has been registered.");
-      }
+    @Autowired
+    public RegisterController(UserService userService) {
+        this.userService = userService;
     }
-    return response;
-  }
 
-  @RequestMapping(value = "/email", method = RequestMethod.GET)
-  public Response emailAvailable(@RequestParam String email) {
-    return new Response(200, "Successful.", isEmailAvailable(email));
-  }
+    @RequestMapping(value = "", method = RequestMethod.POST)
+    public Response register(@RequestBody @Valid User user, BindingResult result) {
+        Response response;
+        if (result.hasErrors()) {
+            response = new Response(400, "Illegal input.", result.toString());
+        } else {
+            if (isEmailAvailable(user.getEmail())) {
+                try {
+                    String rawPassword = user.getPassword();
+                    String encodedPassword = "{bcrypt}" + new BCryptPasswordEncoder().encode(rawPassword);
+                    user.setPassword(encodedPassword);
+                    userService.save(user);
+                    response = new Response(201, "User has been successfully created.");
+                } catch (Exception e) {
+                    response = new Response(400, "Failed to create user.");
+                }
+            } else {
+                response = new Response(400, "The Email has been registered.");
+            }
+        }
+        return response;
+    }
 
-  private boolean isEmailAvailable(String email) {
-    return userService.count(new QueryWrapper<User>().eq("email", email)) == 0;
-  }
+    @RequestMapping(value = "/email", method = RequestMethod.GET)
+    public Response emailAvailable(@RequestParam String email) {
+        return new Response(200, "Successful.", isEmailAvailable(email));
+    }
+
+    private boolean isEmailAvailable(String email) {
+        return userService.count(new QueryWrapper<User>().eq("email", email)) == 0;
+    }
 }

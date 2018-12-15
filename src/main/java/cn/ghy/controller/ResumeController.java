@@ -25,35 +25,35 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping(value = "/resume")
 public class ResumeController {
 
-  private FileUtils fileUtils = new FileUtils();
-  private String basePath = fileUtils.getRoot() + "resumes/ghy/";
+    private FileUtils fileUtils = new FileUtils();
+    private String basePath = fileUtils.getRoot() + "resumes/ghy/";
 
-  public ResumeController() throws UnsupportedEncodingException {
-  }
-
-  @RequestMapping(value = "/ghy", method = RequestMethod.POST)
-  public Response insert(@Valid @RequestBody Resume resume, BindingResult result)
-      throws IOException {
-    if (result.hasErrors()) {
-      return new Response(400, "Illegal input.");
-    } else {
-      fileUtils.createDirectory(basePath);
-      String path = basePath + getResumeFileName();
-      resume.write2Excel(path);
-      return new Response(201, "Successfully submit your resume.");
+    public ResumeController() throws UnsupportedEncodingException {
     }
-  }
 
-  private String getResumeFileName() {
-    String fileName;
-    Calendar cal = Calendar.getInstance();
-    int month = cal.get(Calendar.MONTH) + 1;
-    int year = cal.get(Calendar.YEAR);
-    if (month <= 6) {
-      fileName = year + "_spring" + ".xlsx";
-    } else {
-      fileName = year + "_fall" + ".xlsx";
+    @RequestMapping(value = "/ghy", method = RequestMethod.POST)
+    public Response insert(@Valid @RequestBody Resume resume, BindingResult result)
+            throws IOException {
+        if (result.hasErrors()) {
+            return new Response(400, "Illegal input.");
+        } else {
+            fileUtils.createDirectory(basePath);
+            String path = basePath + getResumeFileName();
+            resume.write2Excel(path);
+            return new Response(201, "Successfully submit your resume.");
+        }
     }
-    return fileName;
-  }
+
+    private String getResumeFileName() {
+        String fileName;
+        Calendar cal = Calendar.getInstance();
+        int month = cal.get(Calendar.MONTH) + 1;
+        int year = cal.get(Calendar.YEAR);
+        if (month <= 6) {
+            fileName = year + "_spring" + ".xlsx";
+        } else {
+            fileName = year + "_fall" + ".xlsx";
+        }
+        return fileName;
+    }
 }

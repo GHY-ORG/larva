@@ -21,23 +21,23 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
  */
 public class CustomUserDetailService implements UserDetailsService {
 
-  @Autowired
-  private UserService userService;
+    @Autowired
+    private UserService userService;
 
-  @Override
-  public UserDetails loadUserByUsername(String s) throws UsernameNotFoundException {
-    UserDetails userDetails;
-    cn.ghy.entity.User user = userService.getOne(new QueryWrapper<User>().eq("email", s));
-    Collection<GrantedAuthority> authList = getAuthorities();
-    userDetails = new org.springframework.security.core.userdetails.User(user.getEmail(),
-        user.getPassword(), user.getIsEnabled() == 1, true, true, true,
-        authList);
-    return userDetails;
-  }
+    @Override
+    public UserDetails loadUserByUsername(String s) throws UsernameNotFoundException {
+        UserDetails userDetails;
+        cn.ghy.entity.User user = userService.getOne(new QueryWrapper<User>().eq("email", s));
+        Collection<GrantedAuthority> authList = getAuthorities();
+        userDetails = new org.springframework.security.core.userdetails.User(user.getEmail(),
+                user.getPassword(), user.getIsEnabled() == 1, true, true, true,
+                authList);
+        return userDetails;
+    }
 
-  private Collection<GrantedAuthority> getAuthorities() {
-    List<GrantedAuthority> authList = new ArrayList<>();
-    authList.add(new SimpleGrantedAuthority("ROLE_USER"));
-    return authList;
-  }
+    private Collection<GrantedAuthority> getAuthorities() {
+        List<GrantedAuthority> authList = new ArrayList<>();
+        authList.add(new SimpleGrantedAuthority("ROLE_USER"));
+        return authList;
+    }
 }
