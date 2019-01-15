@@ -1,4 +1,4 @@
-# Larva
+# Larva CMS
 
 [![License](http://img.shields.io/:license-mit-blue.svg?style=flat-square)](http://badges.mit-license.org)
 
@@ -10,7 +10,7 @@ Larva is a Spring MVC-based website background management system with built-in u
 - Using RESTful API and JSON Web token to achieve front and rear separation
 
 ### Basic Functions
-- Role management
+- User management
 - File management
 - Article management
 - Comment management
