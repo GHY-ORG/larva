@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.ghy.larva.dao.IPostMapper">
+
+    <resultMap id="PostResultMap" type="cn.ghy.larva.domain.Post">
+        <id column="post_id" jdbcType="BIGINT" property="postId"/>
+        <result column="user_id" jdbcType="BIGINT" property="userId"/>
+        <result column="post_type" jdbcType="INTEGER" property="postType"/>
+        <result column="post_rank" jdbcType="INTEGER" property="postRank"/>
+        <result column="post_status" jdbcType="INTEGER" property="postStatus"/>
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+        <result column="modified_time" jdbcType="TIMESTAMP" property="modifiedTime"/>
+        <result column="post_title" jdbcType="LONGVARCHAR" property="postTitle"/>
+        <result column="post_content" jdbcType="LONGVARCHAR" property="postContent"/>
+        <collection property="metas" ofType="cn.ghy.larva.domain.PostMeta">
+            <result column="post_id" jdbcType="BIGINT" property="postId"/>
+            <result column="meta_key" jdbcType="VARCHAR" property="metaKey"/>
+            <result column="meta_value" jdbcType="LONGVARCHAR" property="metaValue"/>
+        </collection>
+    </resultMap>
+
+    <insert id="postInsert" parameterType="cn.ghy.larva.domain.Post" useGeneratedKeys="true"
+            keyProperty="postId">
+        insert into post (
+        post_type,
+        <if test="postRank != null">
+            post_rank,
+        </if>
+        <if test="postStatus != null">
+            post_status,
+        </if>
+        post_title,
+        post_content
+        )
+        values (#{
+        #{postType,jdbcType=INTEGER},
+        <if test="postRank != null">
+            #{postRank,jdbcType=INTEGER},
+        </if>
+        <if test="postStatus != null">
+            #{postStatus,jdbcType=INTEGER},
+        </if>
+        #{postTitle,jdbcType=LONGVARCHAR},
+        #{postContent,jdbcType=LONGVARCHAR}
+        )
+    </insert>
+
+    <insert id="metaInsert" parameterType="cn.ghy.larva.domain.Post">
+        insert into post_meta (post_id, meta_key, meta_value)
+        values (#{postId,jdbcType=BIGINT}, #{metaKey,jdbcType=VARCHAR}, #{metaValue,jdbcType=LONGVARCHAR})
+    </insert>
+
+    <delete id="deleteById" parameterType="java.lang.Long">
+        delete
+        from post
+        where post_id = #{postId,jdbcType=BIGINT};
+        delete
+        from post_meta
+        where post_id = #{postId,jdbcType=BIGINT};
+    </delete>
+
+    <update id="updateById" parameterType="cn.ghy.larva.domain.Post">
+        update post
+        set user_id       = #{userId,jdbcType=BIGINT},
+            post_type     = #{postType,jdbcType=INTEGER},
+            post_rank     = #{postRank,jdbcType=INTEGER},
+            post_status   = #{postStatus,jdbcType=INTEGER},
+            create_time   = #{createTime,jdbcType=TIMESTAMP},
+            modified_time = #{modifiedTime,jdbcType=TIMESTAMP}
+        where post_id = #{postId,jdbcType=BIGINT}
+    </update>
+
+    <select id="selectById" parameterType="java.lang.Long" resultMap="PostResultMap">
+        select *
+        from post
+                 left join post_meta on post.post_id = post_meta.post_id
+        where post.post_id = #{postId,jdbcType=BIGINT}
+    </select>
+
+    <select id="selectAll" resultMap="PostResultMap">
+        select *
+        from post
+    </select>
+
+</mapper>
