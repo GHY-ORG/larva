@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="cn.ghy.larva.dao.FileMapper">
+<mapper namespace="cn.ghy.larva.dao.IFileMapper">
+
     <resultMap id="ResultMap" type="cn.ghy.larva.domain.File">
         <id column="file_id" jdbcType="BIGINT" property="fileId"/>
         <result column="file_name" jdbcType="VARCHAR" property="fileName"/>
@@ -13,26 +14,22 @@
         <result column="modified_time" jdbcType="TIMESTAMP" property="modifiedTime"/>
         <result column="description" jdbcType="VARCHAR" property="description"/>
     </resultMap>
-    <select id="selectById" parameterType="java.lang.Long" resultMap="ResultMap">
-        select *
-        from file
-        where file_id = #{fileId,jdbcType=BIGINT}
-    </select>
+    
+    <insert id="insert" parameterType="cn.ghy.larva.domain.File">
+        insert into file (file_id, file_name, file_type,
+                          file_size, local_url, visit_url,
+                          user_id, description)
+        values (#{fileId,jdbcType=BIGINT}, #{fileName,jdbcType=VARCHAR}, #{fileType,jdbcType=VARCHAR},
+                #{fileSize,jdbcType=BIGINT}, #{localUrl,jdbcType=VARCHAR}, #{visitUrl,jdbcType=VARCHAR},
+                #{userId,jdbcType=BIGINT}, #{description,jdbcType=VARCHAR})
+    </insert>
+
     <delete id="deleteById" parameterType="java.lang.Long">
         delete
         from file
         where file_id = #{fileId,jdbcType=BIGINT}
     </delete>
-    <insert id="insert" parameterType="cn.ghy.larva.domain.File">
-        insert into file (file_id, file_name, file_type,
-                          file_size, local_url, visit_url,
-                          user_id, create_time, modified_time,
-                          description)
-        values (#{fileId,jdbcType=BIGINT}, #{fileName,jdbcType=VARCHAR}, #{fileType,jdbcType=VARCHAR},
-                #{fileSize,jdbcType=BIGINT}, #{localUrl,jdbcType=VARCHAR}, #{visitUrl,jdbcType=VARCHAR},
-                #{userId,jdbcType=BIGINT}, #{createTime,jdbcType=TIMESTAMP}, #{modifiedTime,jdbcType=TIMESTAMP},
-                #{description,jdbcType=VARCHAR})
-    </insert>
+
     <update id="updateById" parameterType="cn.ghy.larva.domain.File">
         update file
         set file_name     = #{fileName,jdbcType=VARCHAR},
@@ -41,9 +38,14 @@
             local_url     = #{localUrl,jdbcType=VARCHAR},
             visit_url     = #{visitUrl,jdbcType=VARCHAR},
             user_id       = #{userId,jdbcType=BIGINT},
-            create_time   = #{createTime,jdbcType=TIMESTAMP},
             modified_time = #{modifiedTime,jdbcType=TIMESTAMP},
             description   = #{description,jdbcType=VARCHAR}
         where file_id = #{fileId,jdbcType=BIGINT}
     </update>
+
+    <select id="selectById" parameterType="java.lang.Long" resultMap="ResultMap">
+        select *
+        from file
+        where file_id = #{fileId,jdbcType=BIGINT}
+    </select>
 </mapper>

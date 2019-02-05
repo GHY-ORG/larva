@@ -16,7 +16,9 @@
         <javaModelGenerator targetPackage="cn.ghy.larva.domain" targetProject="src/main/java"/>
         <sqlMapGenerator targetPackage="mapper" targetProject="src/main/resources"/>
         <javaClientGenerator targetPackage="cn.ghy.larva.dao" targetProject="src/main/java" type="XMLMAPPER"/>
-        <table schema="larva" tableName="file" domainObjectName="File" enableCountByExample="false"
+        <table schema="larva" tableName="user" domainObjectName="User" enableCountByExample="false"
+               enableDeleteByExample="false" enableSelectByExample="false" enableUpdateByExample="false"/>
+        <table schema="larva" tableName="user_meta" domainObjectName="UserMeta" enableCountByExample="false"
                enableDeleteByExample="false" enableSelectByExample="false" enableUpdateByExample="false"/>
     </context>
 </generatorConfiguration>

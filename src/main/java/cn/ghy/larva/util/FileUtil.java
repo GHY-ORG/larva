@@ -11,6 +11,7 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class FileUtil {
@@ -18,13 +19,13 @@ public class FileUtil {
     public String baseLocalURL = "D:/upload/";
     private String baseVisitURL = "/upload/";
 
-    public List<cn.ghy.larva.domain.File> upload(HttpServletRequest request, String destination) throws IOException {
-        return upload(request, destination, "");
+    public List<cn.ghy.larva.domain.File> upload(HttpServletRequest request, String to) throws IOException {
+        return upload(request, to, "");
     }
 
-    public ArrayList<cn.ghy.larva.domain.File> upload(HttpServletRequest request, String destination, String description) throws IOException {
+    public ArrayList<cn.ghy.larva.domain.File> upload(HttpServletRequest request, String to, String desc) throws IOException {
         ArrayList<cn.ghy.larva.domain.File> iFiles = new ArrayList<>();
-        //创建一个通用的多部分解析器
+        String localURL = baseLocalURL + to + File.separator;
         CommonsMultipartResolver multipartResolver = new CommonsMultipartResolver(request.getSession().getServletContext());
         //判断 request 是否有文件上传,即多部分请求
         if (multipartResolver.isMultipart(request)) {
@@ -34,13 +35,14 @@ public class FileUtil {
             List<MultipartFile> files = multiRequest.getFiles("file");
             for (MultipartFile file : files) {
                 String fileName = file.getOriginalFilename();
-                //如果名称不为“”,说明该文件存在，否则说明该文件不存在
+                //如果名称不为"",说明该文件存在，否则说明该文件不存在
                 assert fileName != null;
                 if (!"".equals(fileName.trim())) {
                     //保存本地文件
-                    file.transferTo(new File(baseLocalURL + destination + "/" + fileName));
+                    File localFile = new File(localURL + fileName);
+                    file.transferTo(localFile);
                     //获取文件信息
-                    cn.ghy.larva.domain.File iFile = getFileInfo(file, destination, description);
+                    cn.ghy.larva.domain.File iFile = getFileInfo(file, to, desc);
                     iFiles.add(iFile);
                 }
             }
@@ -48,21 +50,30 @@ public class FileUtil {
         return iFiles;
     }
 
-    private cn.ghy.larva.domain.File getFileInfo(MultipartFile file, String destination, String description) {
-        cn.ghy.larva.domain.File iFile = new cn.ghy.larva.domain.File();
+    private cn.ghy.larva.domain.File getFileInfo(MultipartFile file, String to, String desc) {
+
         String fileName = file.getOriginalFilename();
+        String fileType = getFileSuffix(fileName);
+        long fileSize = file.getSize();
+        String localURL = baseLocalURL + to + File.separator + fileName;
+        String visitURL = baseVisitURL + to + "/" + fileName;
+        Date now = new Date();
+
+        cn.ghy.larva.domain.File iFile = new cn.ghy.larva.domain.File();
         iFile.setFileName(fileName);
-        iFile.setFileSize(file.getSize());
-        iFile.setFileType(this.getFileSuffix(fileName));
-        iFile.setLocalUrl(baseLocalURL + destination + "/" + fileName);
-        iFile.setVisitUrl(baseVisitURL + destination + "/" + fileName);
-        iFile.setDescription(description);
+        iFile.setFileType(fileType);
+        iFile.setFileSize(fileSize);
+        iFile.setLocalUrl(localURL);
+        iFile.setVisitUrl(visitURL);
+        iFile.setCreateTime(now);
+        iFile.setModifiedTime(now);
+        iFile.setDescription(desc);
         return iFile;
     }
 
     public String getFileShortName(String fileName) {
         /**
-         * @description: 获取文件名
+         * @desc: 获取文件名
          * @param: [fileName]
          * @return: java.lang.String
          */
@@ -74,7 +85,7 @@ public class FileUtil {
 
     public String getFileSuffix(String fileName) {
         /**
-         * @description: 获取文件后缀
+         * @desc: 获取文件后缀
          * @param: [fileName]
          * @return: java.lang.String
          */
@@ -84,21 +95,21 @@ public class FileUtil {
         return "";
     }
 
-    public void createDirectory(String directory) {
+    public void createDir(String dir) {
         /**
-         * @description: 创建目录
-         * @param: [directory]
+         * @desc: 创建目录
+         * @param: [dir]
          * @return: void
          */
-        File dir = new File(directory);
-        if (!dir.exists()) {
-            dir.mkdirs();
+        File directory = new File(baseLocalURL + dir);
+        if (!directory.exists()) {
+            directory.mkdirs();
         }
     }
 
     public void writeExcel(XSSFWorkbook workbook, String excelFilePath) throws IOException {
         /**
-         * @description: 保存Excel文件
+         * @desc: 保存Excel文件
          * @param: [workbook, excelFilePath]
          * @return: void
          */
@@ -112,7 +123,7 @@ public class FileUtil {
 
     public XSSFWorkbook readExcel(String excelFilePath) throws IOException {
         /**
-         * @description: 读取Excel文件
+         * @desc: 读取Excel文件
          * @param: [excelFilePath]
          * @return: org.apache.poi.xssf.usermodel.XSSFWorkbook
          */

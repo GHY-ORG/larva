@@ -1,8 +1,9 @@
-package cn.ghy.larva.dao;
+package cn.ghy.larva.service;
+
 
 import cn.ghy.larva.domain.File;
 
-public interface FileMapper {
+public interface IFileService {
     int deleteById(Long fileId);
 
     int insert(File record);

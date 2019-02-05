@@ -2,15 +2,14 @@ package cn.ghy.larva.controller;
 
 import cn.ghy.larva.domain.Post;
 import cn.ghy.larva.domain.PostMeta;
-import cn.ghy.larva.domain.Response;
 import cn.ghy.larva.service.IPostService;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.validation.BindingResult;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.Valid;
 import java.util.List;
 
 @RequestMapping(value = "/admin/post")
@@ -25,67 +24,54 @@ public class IPostController {
     }
 
     @RequestMapping(value = "/", method = RequestMethod.POST)
-    public Response insert(@RequestBody @Valid Post post, BindingResult result) {
-        Response response;
-        if (result.hasErrors()) {
-            response = new Response(400, result.toString());
-        } else {
-            try {
-                iPostService.postInsert(post);
-                Long postId = post.getPostId();
-                for (PostMeta meta : post.getMetas()) {
-                    meta.setPostId(postId);
-                    iPostService.metaInsert(meta);
-                }
-                response = new Response(200);
-                System.out.println();
-            } catch (Exception e) {
-                response = new Response(400);
-            }
+    public ResponseEntity<?> insert(@RequestBody Post post) {
+        ResponseEntity<?> response;
+        try {
+            iPostService.insert(post);
+            response = new ResponseEntity<>(HttpStatus.CREATED);
+        } catch (Exception e) {
+            response = new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
         return response;
     }
 
-    @RequestMapping(value = "/{postId}", method = RequestMethod.DELETE)
-    public Response deleteById(@PathVariable long postId) {
-        Response response;
+    @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
+    public ResponseEntity<?> deleteById(@PathVariable long id) {
+        ResponseEntity<?> response;
         try {
-            Post post = iPostService.selectById(postId);
+            Post post = iPostService.selectById(id);
             if (post != null) {
-                iPostService.deleteById(postId);
-                response = new Response(204);
+                iPostService.deleteById(id);
+                response = new ResponseEntity<>(HttpStatus.NO_CONTENT);
             } else {
-                response = new Response(400);
+                response = new ResponseEntity<>(HttpStatus.BAD_REQUEST);
             }
         } catch (Exception e) {
-            response = new Response(400);
+            response = new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
         return response;
     }
 
-    @RequestMapping(value = "/{postId}", method = RequestMethod.GET)
-    public Response selectById(@PathVariable long postId) {
-        Response response;
-        Post post = iPostService.selectById(postId);
+    @RequestMapping(value = "/{id}", method = RequestMethod.GET)
+    public ResponseEntity<?> selectById(@PathVariable long id) {
+        ResponseEntity<?> response;
+        Post post = iPostService.selectById(id);
         if (post != null) {
-            response = new Response(200, post);
+            response = new ResponseEntity<>(post, HttpStatus.OK);
         } else {
-            response = new Response(404);
+            response = new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
         return response;
     }
 
     @RequestMapping(value = "/", method = RequestMethod.GET)
-    public Response selectAll(@RequestParam(value = "page", defaultValue = "1") int page,
-                              @RequestParam(value = "per_page", defaultValue = "20") int perPage) {
-        Response response;
-        PageHelper.startPage(page, perPage);
+    public ResponseEntity<?> selectAll() {
+        ResponseEntity<?> response;
         List<Post> postList = iPostService.selectAll();
         if (postList.size() > 0) {
-            PageInfo<Post> pageInfo = new PageInfo<>(postList);
-            response = new Response(200, pageInfo);
+            response = new ResponseEntity<>(postList, HttpStatus.OK);
         } else {
-            response = new Response(404);
+            response = new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
         return response;
     }

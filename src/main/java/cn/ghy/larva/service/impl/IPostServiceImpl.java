@@ -18,12 +18,13 @@ public class IPostServiceImpl implements IPostService {
         this.iPostMapper = iPostMapper;
     }
 
-    public Long postInsert(Post post) {
-        return iPostMapper.postInsert(post);
-    }
-
-    public void metaInsert(PostMeta postMeta) {
-        iPostMapper.metaInsert(postMeta);
+    public void insert(Post post) {
+        iPostMapper.postInsert(post);
+        Long id = post.getPostId();
+        for (PostMeta meta : post.getMetas()) {
+            meta.setPostId(id);
+            iPostMapper.metaInsert(meta);
+        }
     }
 
     public void deleteById(Long postId) {

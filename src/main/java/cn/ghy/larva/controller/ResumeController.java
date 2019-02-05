@@ -24,7 +24,7 @@ public class ResumeController {
             return new Response(400);
         } else {
             String basePath = fileUtil.baseLocalURL + "/resume/";
-            fileUtil.createDirectory(basePath);
+            //fileUtil.createDirectory(basePath);
             String path = basePath + getResumeFileName();
             resume.write2Excel(path);
             return new Response(201);

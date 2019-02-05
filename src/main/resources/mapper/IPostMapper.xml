@@ -19,9 +19,9 @@
         </collection>
     </resultMap>
 
-    <insert id="postInsert" parameterType="cn.ghy.larva.domain.Post" useGeneratedKeys="true"
-            keyProperty="postId">
+    <insert id="postInsert" parameterType="cn.ghy.larva.domain.Post" useGeneratedKeys="true" keyProperty="postId">
         insert into post (
+        user_id,
         post_type,
         <if test="postRank != null">
             post_rank,
@@ -32,7 +32,8 @@
         post_title,
         post_content
         )
-        values (#{
+        values (
+        #{userId,jdbcType=BIGINT},
         #{postType,jdbcType=INTEGER},
         <if test="postRank != null">
             #{postRank,jdbcType=INTEGER},
@@ -80,6 +81,7 @@
     <select id="selectAll" resultMap="PostResultMap">
         select *
         from post
+                 left join post_meta on post.post_id = post_meta.post_id
     </select>
 
 </mapper>

@@ -1,15 +1,12 @@
 package cn.ghy.larva.service;
 
 import cn.ghy.larva.domain.Post;
-import cn.ghy.larva.domain.PostMeta;
 
 import java.util.List;
 
 public interface IPostService {
 
-    Long postInsert(Post post);
-
-    void metaInsert(PostMeta meta);
+    void insert(Post post);
 
     void deleteById(Long postId);
 
