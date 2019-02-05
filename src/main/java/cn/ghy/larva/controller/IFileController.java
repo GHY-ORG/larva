@@ -35,8 +35,7 @@ public class IFileController {
                 IFileService.insert(file);
             }
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        }
-        catch (Exception e){
+        } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }

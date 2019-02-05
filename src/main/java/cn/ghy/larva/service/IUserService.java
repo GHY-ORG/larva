@@ -8,6 +8,8 @@ public interface IUserService {
 
     void register(User user);
 
+    boolean isEmailAvailable(String userEmail);
+
     String login(String userName, String password);
 
     void deleteById(Long userId);

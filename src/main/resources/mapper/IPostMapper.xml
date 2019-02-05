@@ -12,8 +12,7 @@
         <result column="modified_time" jdbcType="TIMESTAMP" property="modifiedTime"/>
         <result column="post_title" jdbcType="LONGVARCHAR" property="postTitle"/>
         <result column="post_content" jdbcType="LONGVARCHAR" property="postContent"/>
-        <collection property="metas" ofType="cn.ghy.larva.domain.PostMeta">
-            <result column="post_id" jdbcType="BIGINT" property="postId"/>
+        <collection property="metas" ofType="cn.ghy.larva.domain.Meta">
             <result column="meta_key" jdbcType="VARCHAR" property="metaKey"/>
             <result column="meta_value" jdbcType="LONGVARCHAR" property="metaValue"/>
         </collection>
@@ -46,7 +45,7 @@
         )
     </insert>
 
-    <insert id="metaInsert" parameterType="cn.ghy.larva.domain.Post">
+    <insert id="metaInsert" parameterType="java.util.HashMap">
         insert into post_meta (post_id, meta_key, meta_value)
         values (#{postId,jdbcType=BIGINT}, #{metaKey,jdbcType=VARCHAR}, #{metaValue,jdbcType=LONGVARCHAR})
     </insert>

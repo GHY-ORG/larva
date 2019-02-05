@@ -7,6 +7,8 @@ import java.util.List;
 public interface IUserMapper {
     Long userInsert(User user);
 
+    Long isEmailAvailable(String userEmail);
+
     int deleteById(Long userId);
 
     int updateById(User user);

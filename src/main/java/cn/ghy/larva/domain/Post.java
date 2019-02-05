@@ -22,7 +22,7 @@ public class Post {
 
     private String postContent;
 
-    private List<PostMeta> metas;
+    private List<Meta> metas;
 
     public Long getPostId() {
         return postId;
@@ -96,11 +96,11 @@ public class Post {
         this.postContent = postContent;
     }
 
-    public List<PostMeta> getMetas() {
+    public List<Meta> getMetas() {
         return metas;
     }
 
-    public void setMetas(List<PostMeta> metas) {
+    public void setMetas(List<Meta> metas) {
         this.metas = metas;
     }
 }

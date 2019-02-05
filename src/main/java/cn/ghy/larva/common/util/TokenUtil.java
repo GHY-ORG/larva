@@ -37,7 +37,6 @@ public class TokenUtil implements Serializable {
 
     public String generateToken(UserDetails userDetails) {
         Map<String, Object> claims = new HashMap<>(2);
-        claims.put("sub", userDetails.getUsername());
         claims.put("created", new Date());
         return generateToken(claims);
     }

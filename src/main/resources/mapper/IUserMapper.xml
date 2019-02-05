@@ -11,8 +11,7 @@
         <result column="user_status" jdbcType="INTEGER" property="userStatus"/>
         <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
         <result column="modified_time" jdbcType="TIMESTAMP" property="modifiedTime"/>
-        <collection property="metas" ofType="cn.ghy.larva.domain.UserMeta">
-            <result column="user_id" jdbcType="BIGINT" property="userId"/>
+        <collection property="metas" ofType="cn.ghy.larva.domain.Meta">
             <result column="meta_key" jdbcType="VARCHAR" property="metaKey"/>
             <result column="meta_value" jdbcType="LONGVARCHAR" property="metaValue"/>
         </collection>
@@ -24,6 +23,12 @@
         values (#{userId,jdbcType=BIGINT}, #{userName,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR},
                 #{realName,jdbcType=VARCHAR}, #{userEmail,jdbcType=VARCHAR})
     </insert>
+
+    <select id="isEmailAvailable" parameterType="java.lang.String" resultType="java.lang.Long">
+        select count(user_email)
+        from user
+        where user_email = #{userEmail, jdbcType=VARCHAR}
+    </select>
 
     <delete id="deleteById" parameterType="java.lang.Long">
         delete
@@ -47,20 +52,41 @@
     </update>
 
     <select id="selectByUserName" parameterType="java.lang.String" resultMap="UserResultMap">
-        select *
+        select user_id,
+               user_name,
+               password,
+               user_status
         from user
-        where user_name = #{userName,jdbcType=VARCHAR}
+        where user.user_name = #{userName,jdbcType=VARCHAR}
     </select>
 
     <select id="selectById" parameterType="java.lang.Long" resultMap="UserResultMap">
-        select *
+        select user.user_id,
+               user.user_name,
+               user.password,
+               user.real_name,
+               user.user_email,
+               user.user_status,
+               user.create_time,
+               user.modified_time,
+               user_meta.meta_key,
+               user_meta.meta_value
         from user
                  left join user_meta on user.user_id = user_meta.user_id
-        where user_id = #{userId,jdbcType=BIGINT}
+        where user.user_id = #{userId,jdbcType=BIGINT}
     </select>
 
     <select id="selectAll" resultMap="UserResultMap">
-        select *
+        select user.user_id,
+               user.user_name,
+               user.password,
+               user.real_name,
+               user.user_email,
+               user.user_status,
+               user.create_time,
+               user.modified_time,
+               user_meta.meta_key,
+               user_meta.meta_value
         from user
                  left join user_meta on user.user_id = user_meta.user_id
     </select>

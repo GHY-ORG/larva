@@ -1,4 +1,4 @@
-package cn.ghy.larva.security;
+package cn.ghy.larva.common.config.security.service;
 
 import cn.ghy.larva.domain.User;
 import cn.ghy.larva.service.IUserService;
@@ -16,6 +16,7 @@ import java.util.List;
 
 @Service
 public class CustomUserDetailsService implements UserDetailsService {
+
     @Autowired
     IUserService iUserService;
 

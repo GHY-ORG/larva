@@ -1,19 +1,48 @@
 package cn.ghy.larva.domain;
 
+import io.swagger.annotations.ApiModelProperty;
+
+import javax.validation.constraints.*;
 import java.util.Date;
 import java.util.List;
 
 public class User {
-
+    @ApiModelProperty(name = "Uid")
     private Long userId;
+
+    @ApiModelProperty(name = "用户名", notes = "用户名长度大于等于2且小于等于50", example = "鲁迅", required = true)
+    @NotBlank
+    @Size(min = 2, max = 50)
     private String userName;
+
+    @ApiModelProperty(name = "用户密码", notes = "密码长度大于等于6且至少包含数字、字母、符号中的任意两种", example = "A1234567", required = true)
+    @NotBlank
+    @Pattern(regexp = "^(?![A-Z]+$)(?![a-z]+$)(?!\\d+$)(?![\\W_]+$)\\S{6,}$")
     private String password;
+
+    @ApiModelProperty(name = "真实姓名", notes = "真实姓名长度大于等于2且小于等于15", example = "周树人", required = true)
+    @NotBlank
+    @Size(min = 2, max = 15)
     private String realName;
+
+    @ApiModelProperty(name = "用户邮箱", notes = "用户邮箱唯一", example = "example@ghy.cn", required = true)
+    @NotBlank
+    @Email
     private String userEmail;
+
+    @ApiModelProperty(name = "用户状态", notes = "标记用户状态（如：未启用，注销，过期等）", example = "1", allowableValues = "0 | 1 | 2 | ...")
     private Integer userStatus;
+
+    @ApiModelProperty(name = "用户创建时间", example = "2019-02-05T16:08:51.325Z")
+    @Past
     private Date createTime;
+
+    @ApiModelProperty(name = "用户上次修改信息时间", example = "2019-02-05T16:08:51.325Z")
+    @Past
     private Date modifiedTime;
-    private List<UserMeta> metas;
+
+    @ApiModelProperty(name = "用户元字段")
+    private List<Meta> metas;
 
     public Long getUserId() {
         return userId;
@@ -79,11 +108,11 @@ public class User {
         this.modifiedTime = modifiedTime;
     }
 
-    public List<UserMeta> getMetas() {
+    public List<Meta> getMetas() {
         return metas;
     }
 
-    public void setMetas(List<UserMeta> metas) {
+    public void setMetas(List<Meta> metas) {
         this.metas = metas;
     }
 }

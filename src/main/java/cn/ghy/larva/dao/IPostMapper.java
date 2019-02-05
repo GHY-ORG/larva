@@ -1,14 +1,14 @@
 package cn.ghy.larva.dao;
 
 import cn.ghy.larva.domain.Post;
-import cn.ghy.larva.domain.PostMeta;
 
 import java.util.List;
+import java.util.Map;
 
 public interface IPostMapper {
     Long postInsert(Post post);
 
-    void metaInsert(PostMeta postMeta);
+    void metaInsert(Map<String, Object> meta);
 
     int deleteById(Long postId);
 

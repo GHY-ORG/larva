@@ -1,15 +1,15 @@
-package cn.ghy.larva.config;
+package cn.ghy.larva.common.config;
 
-import cn.ghy.larva.security.CustomUserDetailsService;
-import cn.ghy.larva.security.JwtAuthenticationFilter;
+import cn.ghy.larva.common.config.security.JwtAuthenticationFilter;
+import cn.ghy.larva.common.config.security.service.CustomUserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.BeanIds;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -51,13 +51,23 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         httpSecurity.csrf().disable();
         httpSecurity.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
         httpSecurity.authorizeRequests()
-                .antMatchers("/").permitAll()
-                .antMatchers(HttpMethod.POST, "/admin/register").permitAll()
-                .antMatchers(HttpMethod.POST, "/admin/login/**").permitAll()
-                .antMatchers("/admin").hasRole("USER")
-                .anyRequest().authenticated();
+                .antMatchers("/").permitAll();
+        //.antMatchers(HttpMethod.POST, "/admin/register").permitAll()
+        //.antMatchers(HttpMethod.POST, "/admin/login").permitAll()
+        //.antMatchers("/admin").hasRole("USER")
+        //.anyRequest().authenticated();
         // Add our custom JWT security filter
         httpSecurity.addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
+    }
 
+    @Override
+    public void configure(WebSecurity web) {
+        // Allow swagger to be accessed without authentication
+        web.ignoring().antMatchers("/v2/api-docs")//
+                .antMatchers("/swagger-resources/**")//
+                .antMatchers("/swagger-ui.html")//
+                .antMatchers("/configuration/**")//
+                .antMatchers("/webjars/**")//
+                .antMatchers("/public");
     }
 }
