@@ -14,9 +14,9 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
+@Api(description = "用户管理")
 @RestController
 @RequestMapping(value = "/admin")
-@Api(description = "用户管理")
 public class IUserController {
     private final IUserService iUserService;
 
@@ -32,7 +32,7 @@ public class IUserController {
         return new ResponseEntity<>(iUserService.login(userName, password), HttpStatus.OK);
     }
 
-    @ApiOperation(value = "用户注册", notes = "1，用户名长度大于等于2且小于等于50；\n 2，真实姓名长度大于等于2且小于等于15；\n 3，密码长度大于等于6且至少包含数字、字母、符号中的任意两种；\n 4，用户邮箱未注册。")
+    @ApiOperation(value = "注册用户", notes = "1，用户名长度大于等于2且小于等于50；\n 2，真实姓名长度大于等于2且小于等于15；\n 3，密码长度大于等于6且至少包含数字、字母、符号中的任意两种；\n 4，用户邮箱未注册。")
     @RequestMapping(value = "/register", method = RequestMethod.POST)
     public ResponseEntity<?> register(@Valid @RequestBody User user, BindingResult bindingResult) {
         ResponseEntity<?> response;
@@ -42,7 +42,7 @@ public class IUserController {
         } else {
             if (iUserService.isEmailAvailable(user.getUserEmail())) {
                 iUserService.register(user);
-                response = new ResponseEntity<>(HttpStatus.OK);
+                response = new ResponseEntity<>(HttpStatus.CREATED);
             } else {
                 response = new ResponseEntity<>(HttpStatus.BAD_REQUEST);
             }
@@ -50,7 +50,7 @@ public class IUserController {
         return response;
     }
 
-    @ApiOperation(value = "邮箱检验", notes = "检验邮箱是否已被注册")
+    @ApiOperation(value = "检验邮箱", notes = "检验邮箱是否已被注册")
     @ApiImplicitParam(value = "email", name = "用户邮箱", required = true)
     @RequestMapping(value = "/register/is-email-available", method = RequestMethod.GET)
     public ResponseEntity<?> isEmailAvailable(@RequestParam String email) {

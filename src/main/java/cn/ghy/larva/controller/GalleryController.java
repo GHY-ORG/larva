@@ -5,6 +5,7 @@ import cn.ghy.larva.domain.Post;
 import cn.ghy.larva.service.IFileService;
 import cn.ghy.larva.service.IPostService;
 import cn.ghy.larva.util.FileUtil;
+import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -50,7 +51,7 @@ public class GalleryController {
                 post.setPostContent(desc);
                 post.setCreateTime(now);
                 post.setModifiedTime(now);
-                iPostService.insert(post);
+                iPostService.insertPost(post);
             }
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         } catch (Exception e) {

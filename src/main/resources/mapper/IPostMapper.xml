@@ -12,13 +12,30 @@
         <result column="modified_time" jdbcType="TIMESTAMP" property="modifiedTime"/>
         <result column="post_title" jdbcType="LONGVARCHAR" property="postTitle"/>
         <result column="post_content" jdbcType="LONGVARCHAR" property="postContent"/>
+        <association property="category" resultMap="CategoryResultMap"/>
         <collection property="metas" ofType="cn.ghy.larva.domain.Meta">
             <result column="meta_key" jdbcType="VARCHAR" property="metaKey"/>
             <result column="meta_value" jdbcType="LONGVARCHAR" property="metaValue"/>
         </collection>
+        <collection property="tags" ofType="cn.ghy.larva.domain.Tag">
+            <id column="tag_id" jdbcType="BIGINT" property="tagId"/>
+            <result column="tag_name" jdbcType="VARCHAR" property="tagName"/>
+            <result column="tag_description" jdbcType="VARCHAR" property="description"/>
+        </collection>
+    </resultMap>
+    <resultMap id="CategoryResultMap" type="cn.ghy.larva.domain.Category">
+        <id column="category_id" jdbcType="BIGINT" property="categoryId"/>
+        <result column="category_name" jdbcType="VARCHAR" property="categoryName"/>
+        <result column="category_description" jdbcType="VARCHAR" property="categoryDescription"/>
+        <result column="parent_category" jdbcType="BIGINT" property="parentCategory"/>
+    </resultMap>
+    <resultMap id="TagResultMap" type="cn.ghy.larva.domain.Tag">
+        <id column="tag_id" jdbcType="BIGINT" property="tagId"/>
+        <result column="tag_name" jdbcType="VARCHAR" property="tagName"/>
+        <result column="tag_description" jdbcType="VARCHAR" property="tagDescription"/>
     </resultMap>
 
-    <insert id="postInsert" parameterType="cn.ghy.larva.domain.Post" useGeneratedKeys="true" keyProperty="postId">
+    <insert id="insertPost" parameterType="cn.ghy.larva.domain.Post" useGeneratedKeys="true" keyProperty="postId">
         insert into post (
         user_id,
         post_type,
@@ -44,10 +61,55 @@
         #{postContent,jdbcType=LONGVARCHAR}
         )
     </insert>
-
-    <insert id="metaInsert" parameterType="java.util.HashMap">
-        insert into post_meta (post_id, meta_key, meta_value)
+    <insert id="insertMeta">
+        insert into post_meta (post_id, meta_key, meta_value
+        )
         values (#{postId,jdbcType=BIGINT}, #{metaKey,jdbcType=VARCHAR}, #{metaValue,jdbcType=LONGVARCHAR})
+    </insert>
+    <insert id="insertCategory" parameterType="cn.ghy.larva.domain.Category" useGeneratedKeys="true"
+            keyProperty="categoryId">
+        insert into category (
+        category_name
+        <if test="categoryDescription != null">
+            ,category_description
+        </if>
+        <if test="parentCategory != null">
+            ,parent_category
+        </if>
+        )
+        values (
+        #{categoryName,jdbcType=VARCHAR}
+        <if test="categoryDescription != null">
+            , #{categoryDescription,jdbcType=VARCHAR}
+        </if>
+        <if test="parentCategory != null">
+            ,#{parentCategory, jdbcType="BIGINT"}
+        </if>
+        )
+    </insert>
+    <insert id="insertPostCategory">
+        insert into post_category(post_id, category_id
+        )
+        values (#{postId,jdbcType=BIGINT}, #{categoryId,jdbcType=BIGINT})
+    </insert>
+    <insert id="insertTag" parameterType="cn.ghy.larva.domain.Tag" useGeneratedKeys="true" keyProperty="tagId">
+        insert into tag (
+        tag_name
+        <if test="tagDescription != null">
+            ,tag_description
+        </if>
+        )
+        values (
+        #{tagName,jdbcType=VARCHAR}
+        <if test="tagDescription != null">
+            ,#{tagDescription,jdbcType=VARCHAR}
+        </if>
+        );
+    </insert>
+    <insert id="insertPostTag">
+        insert into post_tag(post_id, tag_id
+        )
+        values (#{postId,jdbcType=BIGINT}, #{tagId,jdbcType=BIGINT})
     </insert>
 
     <delete id="deleteById" parameterType="java.lang.Long">
@@ -57,6 +119,12 @@
         delete
         from post_meta
         where post_id = #{postId,jdbcType=BIGINT};
+        delete
+        from post_category
+        where post_id = #{postId,jdbcType=BIGINT};
+        delete
+        from post_tag
+        where #{postId,jdbcType=BIGINT};
     </delete>
 
     <update id="updateById" parameterType="cn.ghy.larva.domain.Post">
@@ -70,17 +138,82 @@
         where post_id = #{postId,jdbcType=BIGINT}
     </update>
 
-    <select id="selectById" parameterType="java.lang.Long" resultMap="PostResultMap">
-        select *
+    <select id="selectCategoryById" parameterType="java.lang.Long" resultMap="CategoryResultMap">
+        select category.category_id, category.category_name, category.category_description, category.parent_category
+        from category
+        where category.category_id = #{categoryId,jdbcType=BIGINT}
+    </select>
+    <select id="selectAllCategory" resultMap="CategoryResultMap">
+        select category.category_id, category.category_name, category.category_description, category.parent_category
+        from category
+    </select>
+    <select id="selectTagById" parameterType="java.lang.Long" resultMap="TagResultMap">
+        select tag.tag_id, tag.tag_name, tag.tag_description
+        from tag
+        where tag.tag_id = #{tagId,jdbcType=BIGINT}
+    </select>
+    <select id="selectTagByTagName" parameterType="java.lang.String" resultMap="TagResultMap">
+        select tag.tag_id, tag.tag_name, tag.tag_description
+        from tag
+        where tag.tag_name = #{tagName,jdbcType=VARCHAR}
+    </select>
+    <select id="selectAllTag" resultMap="TagResultMap">
+        select tag.tag_id, tag.tag_name, tag.tag_description
+        from tag
+    </select>
+    <select id="selectPostById" parameterType="java.lang.Long" resultMap="PostResultMap">
+        select post.post_id,
+               post.user_id,
+               post.post_title,
+               post.post_content,
+               post.post_type,
+               post.post_rank,
+               post.post_status,
+               post.create_time,
+               post.modified_time,
+               category.category_id,
+               category.category_name,
+               category.category_description,
+               category.parent_category,
+               post_meta.meta_key,
+               post_meta.meta_value,
+               tag.tag_id,
+               tag.tag_name,
+               tag.tag_description
         from post
-                 left join post_meta on post.post_id = post_meta.post_id
+                 left join category on category.category_id in (select post_category.category_id
+                                                                from post_category
+                                                                where post_category.post_id = post.post_id)
+                 left join post_meta on post_meta.post_id = post.post_id
+                 left join tag on post.post_id in
+                                  (select post_tag.tag_id from post_tag where post_tag.post_id = post.post_id)
         where post.post_id = #{postId,jdbcType=BIGINT}
     </select>
-
-    <select id="selectAll" resultMap="PostResultMap">
-        select *
+    <select id="selectAllPost" resultMap="PostResultMap">
+        select post.post_id,
+               post.user_id,
+               post.post_title,
+               post.post_content,
+               post.post_type,
+               post.post_rank,
+               post.post_status,
+               post.create_time,
+               post.modified_time,
+               category.category_id,
+               category.category_name,
+               category.category_description,
+               category.parent_category,
+               post_meta.meta_key,
+               post_meta.meta_value,
+               tag.tag_id,
+               tag.tag_name,
+               tag.tag_description
         from post
-                 left join post_meta on post.post_id = post_meta.post_id
+                 left join category on category.category_id in (select post_category.category_id
+                                                                from post_category
+                                                                where post_category.post_id = post.post_id)
+                 left join post_meta on post_meta.post_id = post.post_id
+                 left join tag on post.post_id in
+                                  (select post_tag.tag_id from post_tag where post_tag.post_id = post.post_id)
     </select>
-
 </mapper>

@@ -22,7 +22,11 @@ public class Post {
 
     private String postContent;
 
+    private Category category;
+
     private List<Meta> metas;
+
+    private List<Tag> tags;
 
     public Long getPostId() {
         return postId;
@@ -96,11 +100,27 @@ public class Post {
         this.postContent = postContent;
     }
 
+    public Category getCategory() {
+        return category;
+    }
+
+    public void setCategory(Category category) {
+        this.category = category;
+    }
+
     public List<Meta> getMetas() {
         return metas;
     }
 
     public void setMetas(List<Meta> metas) {
         this.metas = metas;
+    }
+
+    public List<Tag> getTags() {
+        return tags;
+    }
+
+    public void setTags(List<Tag> tags) {
+        this.tags = tags;
     }
 }

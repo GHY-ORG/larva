@@ -1,16 +1,20 @@
 package cn.ghy.larva.service;
 
+import cn.ghy.larva.domain.Category;
 import cn.ghy.larva.domain.Post;
+import cn.ghy.larva.domain.Tag;
 
 import java.util.List;
 
 public interface IPostService {
 
-    void insert(Post post);
+    Long insertPost(Post post) throws Exception;
+    Long insertCategory(Category category);
+    Long insertTag(Tag tag);
 
     void deleteById(Long postId);
 
-    Post selectById(Long postId);
+    Post selectPostById(Long postId);
 
-    List<Post> selectAll();
+    List<Post> selectAllPost();
 }
