@@ -1,43 +1,46 @@
 package cn.ghy.larva.domain;
 
+/**
+ * @author Ziyang
+ */
 public class Category {
-    private Long categoryId;
+  private Long categoryId;
 
-    private String categoryName;
+  private String categoryName;
 
-    private String categoryDescription;
+  private String categoryDescription;
 
-    private Long parentCategory;
+  private Long parentCategory;
 
-    public Long getCategoryId() {
-        return categoryId;
-    }
+  public Long getCategoryId() {
+    return categoryId;
+  }
 
-    public void setCategoryId(Long categoryId) {
-        this.categoryId = categoryId;
-    }
+  public void setCategoryId(Long categoryId) {
+    this.categoryId = categoryId;
+  }
 
-    public String getCategoryName() {
-        return categoryName;
-    }
+  public String getCategoryName() {
+    return categoryName;
+  }
 
-    public void setCategoryName(String categoryName) {
-        this.categoryName = categoryName;
-    }
+  public void setCategoryName(String categoryName) {
+    this.categoryName = categoryName;
+  }
 
-    public String getCategoryDescription() {
-        return categoryDescription;
-    }
+  public String getCategoryDescription() {
+    return categoryDescription;
+  }
 
-    public void setCategoryDescription(String categoryDescription) {
-        this.categoryDescription = categoryDescription;
-    }
+  public void setCategoryDescription(String categoryDescription) {
+    this.categoryDescription = categoryDescription;
+  }
 
-    public Long getParentCategory() {
-        return parentCategory;
-    }
+  public Long getParentCategory() {
+    return parentCategory;
+  }
 
-    public void setParentCategory(Long parentCategory) {
-        this.parentCategory = parentCategory;
-    }
+  public void setParentCategory(Long parentCategory) {
+    this.parentCategory = parentCategory;
+  }
 }

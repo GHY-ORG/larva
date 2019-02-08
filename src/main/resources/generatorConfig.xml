@@ -1,24 +1,27 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE generatorConfiguration
-        PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN"
-        "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
+    PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN"
+    "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
 
 <generatorConfiguration>
 
-    <properties resource="application.properties"/>
-    <context id="mysql" defaultModelType="flat">
-        <commentGenerator>
-            <property name="suppressDate" value="false"/>
-            <property name="suppressAllComments" value="true"/>
-        </commentGenerator>
-        <jdbcConnection driverClass="${spring.datasource.driver-class-name}" connectionURL="${spring.datasource.url}"
-                        userId="${spring.datasource.username}" password="${spring.datasource.password}"/>
-        <javaModelGenerator targetPackage="cn.ghy.larva.domain" targetProject="src/main/java"/>
-        <sqlMapGenerator targetPackage="mapper" targetProject="src/main/resources"/>
-        <javaClientGenerator targetPackage="cn.ghy.larva.dao" targetProject="src/main/java" type="XMLMAPPER"/>
-        <table schema="larva" tableName="category" domainObjectName="Category" enableCountByExample="false"
-               enableDeleteByExample="false" enableSelectByExample="false" enableUpdateByExample="false"/>
-        <table schema="larva" tableName="tag" domainObjectName="Tag" enableCountByExample="false"
-               enableDeleteByExample="false" enableSelectByExample="false" enableUpdateByExample="false"/>
-    </context>
+  <properties resource="application.properties"/>
+  <context id="mysql" defaultModelType="flat">
+    <commentGenerator>
+      <property name="suppressDate" value="false"/>
+      <property name="suppressAllComments" value="true"/>
+    </commentGenerator>
+    <jdbcConnection driverClass="${spring.datasource.driver-class-name}"
+        connectionURL="${spring.datasource.url}"
+        userId="${spring.datasource.username}" password="${spring.datasource.password}"/>
+    <javaModelGenerator targetPackage="cn.ghy.larva.domain" targetProject="src/main/java"/>
+    <sqlMapGenerator targetPackage="mapper" targetProject="src/main/resources"/>
+    <javaClientGenerator targetPackage="cn.ghy.larva.dao" targetProject="src/main/java"
+        type="XMLMAPPER"/>
+    <table schema="larva" tableName="category" domainObjectName="Category"
+        enableCountByExample="false"
+        enableDeleteByExample="false" enableSelectByExample="false" enableUpdateByExample="false"/>
+    <table schema="larva" tableName="tag" domainObjectName="Tag" enableCountByExample="false"
+        enableDeleteByExample="false" enableSelectByExample="false" enableUpdateByExample="false"/>
+  </context>
 </generatorConfiguration>

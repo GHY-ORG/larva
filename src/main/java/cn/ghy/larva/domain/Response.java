@@ -11,36 +11,35 @@ package cn.ghy.larva.domain;
  */
 public class Response {
 
-    private Integer code;
-    private Object data;
+  private Integer code;
+  private Object data;
 
-    public Response() {
-        this.setCode(200);
-    }
+  public Response() {
+    this.setCode(200);
+  }
 
-    public Response(Integer code) {
-        this.setCode(code);
-    }
+  public Response(Integer code) {
+    this.setCode(code);
+  }
 
-    public Response(Integer code, Object data) {
-        this.setCode(code);
-        this.setData(data);
-    }
+  public Response(Integer code, Object data) {
+    this.setCode(code);
+    this.setData(data);
+  }
 
-    public Integer getCode() {
-        return code;
-    }
+  public Integer getCode() {
+    return code;
+  }
 
-    public void setCode(Integer code) {
-        this.code = code;
-    }
+  public void setCode(Integer code) {
+    this.code = code;
+  }
 
+  public Object getData() {
+    return data;
+  }
 
-    public Object getData() {
-        return data;
-    }
-
-    public void setData(Object data) {
-        this.data = data;
-    }
+  public void setData(Object data) {
+    this.data = data;
+  }
 }
