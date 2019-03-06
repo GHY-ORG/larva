@@ -1,0 +1,203 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.ghy.larva.dao.CommentMapper">
+
+    <resultMap id="commentMap" type="comment">
+        <id property="commentId" column="comment_id"/>
+        <result property="content" column="comment_content"/>
+        <result property="postId" column="comment_post_id"/>
+        <result property="timeModified" column="comment_time_modified"/>
+
+        <association property="user" javaType="user">
+            <id property="userId" column="comment_user_id"/>
+            <result property="userName" column="comment_user_name"/>
+        </association>
+
+        <association property="commentReplied" javaType="comment">
+            <id property="commentId" column="comment_replied_id"/>
+            <result property="content" column="comment_replied_content"/>
+            <!--It's redundant actually-->
+            <result property="postId" column="comment_replied_post_id"/>
+            <result property="timeModified" column="comment_replied_time_modified"/>
+            <association property="user" javaType="user">
+                <id property="userId" column="comment_replied_user_id"/>
+                <result property="userName" column="comment_replied_user_name"/>
+            </association>
+        </association>
+
+        <collection property="replyList" ofType="comment">
+            <id property="commentId" column="reply_id"/>
+            <result property="content" column="reply_content"/>
+            <result property="timeModified" column="reply_time_modified"/>
+            <result property="postId" column="reply_post_id"/>
+            <association property="user" javaType="user">
+                <id property="userId" column="reply_user_id"/>
+                <result property="userName" column="reply_user_name"/>
+            </association>
+            <association property="commentReplied" javaType="comment">
+                <id property="commentId" column="reply_parent_id"/>
+                <result property="content" column="reply_parent_content"/>
+                <!--It's redundant actually-->
+                <result property="postId" column="reply_parent_post_id"/>
+                <result property="timeModified" column="reply_parent_time_modified"/>
+                <association property="user" javaType="user">
+                    <id property="userId" column="reply_parent_user_id"/>
+                    <result property="userName" column="reply_parent_user_name"/>
+                </association>
+            </association>
+        </collection>
+    </resultMap>
+
+    <insert id="insertComment" useGeneratedKeys="true" keyProperty="commentId"
+            keyColumn="comment_id"
+            parameterType="comment">
+
+        insert into comments (
+        content,
+        user_id,
+        post_id
+        <if test="commentRepliedId != null">, comment_replied_id, pri_comment_id</if>
+        )
+        <choose>
+            <when test="commentRepliedId != null">
+                select
+                #{content}, #{user.userId}, post_id, #{commentRepliedId}, pri_comment_id
+                from comments where comment_id = #{commentRepliedId};
+            </when>
+            <otherwise>
+                values (#{content}, #{user.userId}, #{postId});
+            </otherwise>
+        </choose>
+
+        <!--for a top-level comment on a post, its primitive comment id is its id itself-->
+        <if test="commentRepliedId == null">
+            update comments set pri_comment_id = @@identity where comment_id = @@identity;
+        </if>
+    </insert>
+
+
+    <update id="disableComment">
+        update comments
+        set enabled= false
+        where comment_id = #{id}
+          and enabled = true;
+    </update>
+
+    <update id="updateComment">
+        update comments
+        set content       = #{content},
+            time_modified = #{timeModified}
+        where comment_id = #{id}
+          and enabled = true;
+    </update>
+
+    <!--select a comment filling with descendant comments of which, and the max size of the descendant is under control-->
+    <select id="selectComment" resultMap="commentMap">
+        select C.comment_id     as comment_id,
+               C.content        as comment_content,
+               C.post_id        as comment_post_id,
+               C.time_modified  as comment_time_modified,
+               C.user_id        as comment_user_id,
+               CU.user_name     as comment_user_name,
+
+               P.comment_id     as comment_replied_id,
+               P.content        as comment_replied_content,
+               P.post_id        as comment_replied_post_id,
+               P.time_modified  as comment_replied_time_modified,
+               P.user_id        as comment_replied_user_id,
+               PU.user_name     as comment_replied_user_name,
+
+               R.comment_id     as reply_id,
+               R.content        as reply_content,
+               R.post_id        as reply_post_id,
+               R.time_modified  as reply_time_modified,
+               R.user_id        as reply_user_id,
+               RU.user_name     as reply_user_name,
+
+               RP.comment_id    as reply_parent_id,
+               RP.content       as reply_parent_content,
+               RP.post_id       as reply_parent_post_id,
+               RP.time_modified as reply_parent_time_modified,
+               RP.user_id       as reply_parent_user_id,
+               RPU.user_name    as reply_parent_user_name
+
+        from ((comments as C inner join users as CU on C.user_id = CU.user_id and CU.enabled = true)
+            left outer join (comments as P inner join users as PU on P.user_id = PU.user_id and PU.enabled = true) on
+                        C.comment_replied_id =
+                        P.comment_id and P.enabled = true)
+                 left outer join ( (comments as R inner join users as RU on R.user_id = RU.user_id and RU.enabled = true) left outer join (comments as
+            RP inner join users as RPU on RP.user_id = RPU.user_id and RPU.enabled = true) on
+            R.comment_replied_id = RP.comment_id and RP.enabled = true)
+                                 on C.pri_comment_id = R.pri_comment_id and R.enabled = true and C.enabled = true and
+                                    R.comment_replied_id IS NOT NULL
+        where C.comment_id = #{commentId}
+          and C.enabled = true
+        order by R.time_modified desc
+        limit ${rows};
+    </select>
+
+    <!--select supreme comment with a descendant comment list (full, I can not control the max size of the list-->
+    <select id="selectTopLevelCommentList" resultMap="commentMap">
+        select C.comment_id    as comment_id,
+               C.content       as comment_content,
+               C.post_id       as comment_post_id,
+               C.time_modified as comment_time_modified,
+               C.user_id       as comment_user_id,
+               CU.user_name    as comment_user_name
+        from comments as C
+                 inner join users as CU on C.user_id = CU.user_id and CU.enabled = true
+        where C.post_id = #{postId}
+          and C.enabled = true
+        order by C.time_modified desc
+        limit ${offset}, ${rows};
+    </select>
+
+    <select id="selectTopLevelCommentNum" resultType="_int">
+        select count(1)
+        from comments
+        where post_id = #{postId}
+          and enabled = true
+          and comment_replied_id IS NULL
+    </select>
+
+    <!--select descendant comment list of the supreme comment-->
+    <!--I believe one day it could be of any comment (if we choose to reconstruct the database-->
+    <select id="selectDescendantCommentList" resultMap="commentMap">
+        select C.comment_id         as comment_id,
+               C.content            as comment_id,
+               C.post_id            as comment_post_id,
+               C.comment_replied_id as comment_replied_id,
+               C.time_modified      as comment_time_modified,
+               C.user_id            as comment_user_name,
+               CU.user_name         as comment_user_name,
+
+               P.comment_id         as comment_replied_id,
+               P.content            as comment_replied_content,
+               P.post_id            as comment_replied_post_id,
+               P.time_modified      as comment_replied_time_modified,
+               P.user_id            as comment_replied_user_id,
+               PU.user_name         as comment_replied_user_name
+        from (comments as C
+            inner join users as CU on C.user_id = CU.user_id and CU.enabled = true)
+                 left outer join (comments as P inner join users as PU on P.user_id = PU.user_id and PU.enabled = true)
+                                 on C.comment_replied_id = P.comment_id and C.enabled = true and P.enabled = true
+        where C.pri_comment_id = #{commentId}
+          and C.comment_replied_id is not null
+          and C.enabled = true
+        order by C.time_modified desc
+        limit ${offset}, ${rows};
+    </select>
+
+    <select id="selectDescendantCommentNum" resultType="_int">
+        select count(1)
+        from comments
+        where pri_comment_id = #{commentId}
+        and comment_replied_id is not null
+        <if test="descendantMode==false">
+            and comment_replied_id=#{commentId}
+        </if>
+        and enabled = true
+    </select>
+</mapper>
