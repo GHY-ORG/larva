@@ -1,48 +1,47 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-
 <mapper namespace="cn.ghy.larva.dao.CommentMapper">
 
-    <resultMap id="commentMap" type="comment">
+    <resultMap id="commentMap" type="cn.ghy.larva.domain.Comment">
         <id property="commentId" column="comment_id"/>
         <result property="content" column="comment_content"/>
         <result property="postId" column="comment_post_id"/>
         <result property="timeModified" column="comment_time_modified"/>
 
-        <association property="user" javaType="user">
+        <association property="user" javaType="cn.ghy.larva.domain.User">
             <id property="userId" column="comment_user_id"/>
             <result property="userName" column="comment_user_name"/>
         </association>
 
-        <association property="commentReplied" javaType="comment">
+        <association property="commentReplied" javaType="cn.ghy.larva.domain.Comment">
             <id property="commentId" column="comment_replied_id"/>
             <result property="content" column="comment_replied_content"/>
             <!--It's redundant actually-->
             <result property="postId" column="comment_replied_post_id"/>
             <result property="timeModified" column="comment_replied_time_modified"/>
-            <association property="user" javaType="user">
+            <association property="user" javaType="cn.ghy.larva.domain.User">
                 <id property="userId" column="comment_replied_user_id"/>
                 <result property="userName" column="comment_replied_user_name"/>
             </association>
         </association>
 
-        <collection property="replyList" ofType="comment">
+        <collection property="replyList" ofType="cn.ghy.larva.domain.Comment">
             <id property="commentId" column="reply_id"/>
             <result property="content" column="reply_content"/>
             <result property="timeModified" column="reply_time_modified"/>
             <result property="postId" column="reply_post_id"/>
-            <association property="user" javaType="user">
+            <association property="user" javaType="cn.ghy.larva.domain.User">
                 <id property="userId" column="reply_user_id"/>
                 <result property="userName" column="reply_user_name"/>
             </association>
-            <association property="commentReplied" javaType="comment">
+            <association property="commentReplied" javaType="cn.ghy.larva.domain.Comment">
                 <id property="commentId" column="reply_parent_id"/>
                 <result property="content" column="reply_parent_content"/>
                 <!--It's redundant actually-->
                 <result property="postId" column="reply_parent_post_id"/>
                 <result property="timeModified" column="reply_parent_time_modified"/>
-                <association property="user" javaType="user">
+                <association property="user" javaType="cn.ghy.larva.domain.User">
                     <id property="userId" column="reply_parent_user_id"/>
                     <result property="userName" column="reply_parent_user_name"/>
                 </association>
@@ -52,7 +51,7 @@
 
     <insert id="insertComment" useGeneratedKeys="true" keyProperty="commentId"
             keyColumn="comment_id"
-            parameterType="comment">
+            parameterType="cn.ghy.larva.domain.Comment">
 
         insert into comments (
         content,

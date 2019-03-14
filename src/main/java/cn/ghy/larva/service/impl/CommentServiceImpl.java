@@ -16,11 +16,13 @@ import java.util.List;
 
     private final CommentMapper commentMapper;
 
-    @Autowired public CommentServiceImpl(CommentMapper commentMapper) {
+    @Autowired
+    public CommentServiceImpl(CommentMapper commentMapper) {
         this.commentMapper = commentMapper;
     }
 
-    @Override public long addComment(Comment comment) throws Exception {
+    @Override
+    public long addComment(Comment comment) throws Exception {
         commentMapper.insertComment(comment);
         return comment.getCommentId();
     }

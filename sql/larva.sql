@@ -299,6 +299,26 @@ CREATE TABLE IF NOT EXISTS `larva`.`file` (
 )
   ENGINE = InnoDB;
 
+--
+-- Table structure for table `comments`
+--
+
+DROP TABLE IF EXISTS `comments`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+ SET character_set_client = utf8mb4 ;
+CREATE TABLE `comments` (
+  `comment_id` int(11) NOT NULL AUTO_INCREMENT,
+  `enabled` tinyint(1) NOT NULL DEFAULT '1',
+  `comment_replied_id` int(11) DEFAULT NULL,
+  `pri_comment_id` int(11) DEFAULT NULL,
+  `user_id` int(11) NOT NULL,
+  `post_id` int(11) NOT NULL,
+  `content` varchar(110) NOT NULL,
+  `time_created` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `time_modified` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`comment_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=77 DEFAULT CHARSET=utf8;
+
 SET SQL_MODE = '';
 DROP USER IF EXISTS larva;
 SET SQL_MODE = 'TRADITIONAL,ALLOW_INVALID_DATES';

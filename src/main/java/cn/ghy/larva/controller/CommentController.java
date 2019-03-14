@@ -25,7 +25,8 @@ public class CommentController {
     private final CommentService commentService;
     private final IUserService iUserService;
 
-    @Autowired public CommentController(CommentService commentService, IUserService iUserService) {
+    @Autowired
+    public CommentController(CommentService commentService, IUserService iUserService) {
         this.commentService = commentService;
         this.iUserService = iUserService;
     }
